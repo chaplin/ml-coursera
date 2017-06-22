@@ -68,6 +68,23 @@ z3 = a2 * Theta2'; % m x 10
 a3 = sigmoid(z3);
 h = a3;
 
+IX = [ones(m, 1), X]
+
+for i=1:m
+    a1 = IX(i, :); % 1 x 401
+    z2 = a1 * Theta1'; % 1 x 25
+    a2 = [1 sigmoid(z2)]; % 1 x 26
+    z3 = a2 * Theta2'; % 1 * 10
+    a3 = sigmoid(z3);
+    h = a3;
+    
+    yy = (1: num_labels) == y(i) % 1 x 10
+    J = J + sum(-yy .* log(h) - (1 - yy) .* log(1 - h)); 
+    
+    d3 = a3 - yy; % 1 x 10
+    d2 = (Theta2' * d3')' .* (a2 .* (1 - a2)); % 1 x 26
+    Theta2_grad = Theta2_grad + d3 * a2
+end
 % create boolean vector from numeric number like below
 % [6; 10 ] ->
 % [
